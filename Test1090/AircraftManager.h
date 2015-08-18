@@ -8,6 +8,13 @@
 
 #import <Foundation/Foundation.h>
 
-@interface P1090_AircraftManager : NSObject
+@interface AircraftManager : NSObject
+{
+    NSString *someProperty;
+}
+
+@property (nonatomic, retain) NSString *someProperty;
+
++ (id)sharedManager;
 
 @end

@@ -36,7 +36,9 @@
 
         // Setup objects
         lastMessageTimestamp = [NSDate date];
-        messages = [NSMutableArray new];
+        // messages = [NSMutableArray new];
+        positionHistory = [NSMutableArray new];
+        
     }
     
     return self;
@@ -77,9 +79,18 @@
         currentSpeed = [newMessage groundSpeed];
 
     // Assemble and add a position update if we have a position
+    if ( (0 != [newMessage rawLatitude]) && (0 != [newMessage rawLongitude]) )
+    {
+        Position *newPosition = [Position new];
+
+        newPosition.latitude = [newMessage rawLatitude];
+        newPosition.longitude = [newMessage rawLongitude];
+
+        [positionHistory addObject:newPosition];
+    }
 
     // Add message to buffer
-    [messages addObject:newMessage];
+    //[messages addObject:newMessage];
 }
 
 @end

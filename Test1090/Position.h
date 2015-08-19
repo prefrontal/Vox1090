@@ -9,5 +9,12 @@
 #import <Foundation/Foundation.h>
 
 @interface Position : NSObject
+{
+    double latitude;
+    double longitude;
+}
+
+@property (nonatomic, assign) double latitude;
+@property (nonatomic, assign) double longitude;
 
 @end

@@ -29,8 +29,8 @@
 
     NSDate *lastMessageTimestamp;
 
-    NSMutableArray *messages;
-    NSMutableArray *positionReports;
+    //NSMutableArray *messages;
+    NSMutableArray *positionHistory;
 
     // TODO: Aircraft history (position, speed, others?)
 

@@ -10,4 +10,7 @@
 
 @implementation Position
 
+@synthesize latitude;
+@synthesize longitude;
+
 @end

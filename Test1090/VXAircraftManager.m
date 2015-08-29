@@ -6,9 +6,9 @@
 //  Copyright (c) 2015 VoxelWise. All rights reserved.
 //
 
-#import "AircraftManager.h"
+#import "VXAircraftManager.h"
 
-@implementation AircraftManager
+@implementation VXAircraftManager
 
 @synthesize someProperty;
 
@@ -16,7 +16,7 @@
 
 + (id)sharedManager
 {
-    static AircraftManager *sharedMyManager = nil;
+    static VXAircraftManager *sharedMyManager = nil;
 
     static dispatch_once_t onceToken;
 

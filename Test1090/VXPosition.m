@@ -6,9 +6,9 @@
 //  Copyright (c) 2015 VoxelWise. All rights reserved.
 //
 
-#import "Position.h"
+#import "VXPosition.h"
 
-@implementation Position
+@implementation VXPosition
 
 @synthesize latitude;
 @synthesize longitude;

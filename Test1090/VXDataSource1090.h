@@ -23,7 +23,7 @@ typedef NS_ENUM (NSInteger, DataSourceMessageState)
     DataSourceMessageInvalid
 };
 
-@interface DataSource1090 : NSObject <NSStreamDelegate>
+@interface VXDataSource1090 : NSObject <NSStreamDelegate>
 {
 	NSInputStream *inputStream;
 	NSOutputStream *outputStream;

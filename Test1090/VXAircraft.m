@@ -6,9 +6,9 @@
 //  Copyright (c) 2015 XL. All rights reserved.
 //
 
-#import "Aircraft.h"
+#import "VXAircraft.h"
 
-@implementation Aircraft
+@implementation VXAircraft
 
 @synthesize hexID;
 @synthesize flightID;
@@ -23,6 +23,7 @@
 @synthesize currentSpeed;
 
 @synthesize lastMessageTimestamp;
+@synthesize positionHistory;
 
 - (id) init
 {
@@ -44,9 +45,10 @@
     return self;
 }
 
-- (void) addMessage:(Message*)newMessage
+- (void) addMessage:(VXMessage*)newMessage
 {
-    // Update last message timestamp
+    // Update the message timestamp
+    // We are essentially using the reception time
     lastMessageTimestamp = [NSDate date];
 
     // Update the identification
@@ -62,11 +64,18 @@
     if (0 < [newMessage squawk])
         squawk = [newMessage squawk];
 
-    // Only update latitude and longitude if we have both
+    // Only update position information if we have both latitude and longitude
     if ( (0 != [newMessage rawLatitude]) && (0 != [newMessage rawLongitude]) )
     {
         currentRawLatitude = [newMessage rawLatitude];
         currentRawLongitude = [newMessage rawLongitude];
+
+        VXPosition *newPosition = [VXPosition new];
+
+        newPosition.latitude = [newMessage rawLatitude];
+        newPosition.longitude = [newMessage rawLongitude];
+
+        [positionHistory addObject:newPosition];
     }
 
     if ( 0 != [newMessage altitude])
@@ -77,17 +86,6 @@
 
     if ( 0 != [newMessage groundSpeed])
         currentSpeed = [newMessage groundSpeed];
-
-    // Assemble and add a position update if we have a position
-    if ( (0 != [newMessage rawLatitude]) && (0 != [newMessage rawLongitude]) )
-    {
-        Position *newPosition = [Position new];
-
-        newPosition.latitude = [newMessage rawLatitude];
-        newPosition.longitude = [newMessage rawLongitude];
-
-        [positionHistory addObject:newPosition];
-    }
 
     // Add message to buffer
     //[messages addObject:newMessage];

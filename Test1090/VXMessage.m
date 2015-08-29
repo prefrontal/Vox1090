@@ -6,12 +6,12 @@
 //  Copyright (c) 2015 XL. All rights reserved.
 //
 
-#import "Message.h"
+#import "VXMessage.h"
 
 // Constants
 static int EXPECTED_PARAMETER_COUNT = 22;
 
-@implementation Message
+@implementation VXMessage
 
 // Synthesize properties
 @synthesize messageType;
@@ -48,7 +48,7 @@ static int EXPECTED_PARAMETER_COUNT = 22;
 @synthesize isOnGround;
 
 // Initialize a new message with the contents of a SBS1-formatted string
-+ (Message*) newMessageWithSBS1String:(NSString*)message
++ (VXMessage*) newMessageWithSBS1String:(NSString*)message
 {
     NSString* trimmedMessage = [message stringByTrimmingCharactersInSet:[NSCharacterSet newlineCharacterSet]];
 
@@ -61,7 +61,7 @@ static int EXPECTED_PARAMETER_COUNT = 22;
         return nil;
     }
 
-    Message* newMessage = [Message new];
+    VXMessage* newMessage = [VXMessage new];
 
     newMessage.messageType = [messageParts objectAtIndex:0];
     newMessage.messageSubtype = [[messageParts objectAtIndex:1] intValue];

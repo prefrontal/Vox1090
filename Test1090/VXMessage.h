@@ -13,7 +13,7 @@
 
 #import <Foundation/Foundation.h>
 
-@interface Message : NSObject
+@interface VXMessage : NSObject
 {
     NSString* messageType;
     int messageSubtype;
@@ -86,7 +86,7 @@
 @property (nonatomic, assign) bool isOnGround;
 
 // Class Methods
-+ (Message*) newMessageWithSBS1String:(NSString*)message;
++ (VXMessage*) newMessageWithSBS1String:(NSString*)message;
 
 // Instance Methods
 // - (void) GetStringFromMessage; // Needed?

@@ -6,9 +6,9 @@
 //  Copyright (c) 2015 XL. All rights reserved.
 //
 
-#import "DataSource1090.h"
+#import "VXDataSource1090.h"
 
-@implementation DataSource1090
+@implementation VXDataSource1090
 
 // Synthesize properties
 // @synthesize inputStream, outputStream;

@@ -8,8 +8,8 @@
 
 #import "ViewController.h"
 
-#import "Aircraft.h"
-#import "Message.h"
+#import "VXAircraft.h"
+#import "VXMessage.h"
 
 @import GoogleMaps;
 
@@ -17,7 +17,7 @@
 {
     GMSMapView *mapView_;
 
-    DataSource1090* dataSource;
+    VXDataSource1090* dataSource;
     NSTimer* dataProcessingTimer;
 
     NSMutableDictionary* aircraftBuffer;
@@ -51,7 +51,7 @@ static double EXPIRATION_TIME         = 120.0; // Seconds
 
     // -------------------------------------------------------------------------------
 
-    dataSource = [DataSource1090 new];
+    dataSource = [VXDataSource1090 new];
     aircraftBuffer = [NSMutableDictionary new];
 
     // Start the data collection timer
@@ -82,12 +82,12 @@ static double EXPIRATION_TIME         = 120.0; // Seconds
 
         if (nextMessageString)
         {
-            Message* tempMessage = [Message newMessageWithSBS1String:nextMessageString];
+            VXMessage* tempMessage = [VXMessage newMessageWithSBS1String:nextMessageString];
 
             if (!tempMessage) // Sanity check
                 continue;
 
-            Aircraft* tempAircraft = [aircraftBuffer objectForKey: [tempMessage hexId]];
+            VXAircraft* tempAircraft = [aircraftBuffer objectForKey: [tempMessage hexId]];
 
             if (tempAircraft)
             {
@@ -95,7 +95,7 @@ static double EXPIRATION_TIME         = 120.0; // Seconds
             }
             else
             {
-                tempAircraft = [Aircraft new];
+                tempAircraft = [VXAircraft new];
                 [tempAircraft addMessage:tempMessage];
                 [aircraftBuffer setObject:tempAircraft forKey:[tempMessage hexId]];
                 NSLog (@"New Aircraft!");
@@ -108,7 +108,7 @@ static double EXPIRATION_TIME         = 120.0; // Seconds
     // a list of keys and enumerate over those
     for (NSString *key in [aircraftBuffer allKeys])
     {
-        Aircraft *aPlane = [aircraftBuffer objectForKey:key];
+        VXAircraft *aPlane = [aircraftBuffer objectForKey:key];
 
         NSDate* lastMessage = [aPlane lastMessageTimestamp];
 
@@ -139,7 +139,7 @@ static double EXPIRATION_TIME         = 120.0; // Seconds
 
     for (id key in aircraftBuffer)
     {
-        Aircraft *aPlane = [aircraftBuffer objectForKey:key];
+        VXAircraft *aPlane = [aircraftBuffer objectForKey:key];
 
         // Create new marker at current aircraft position
         GMSMarker *planeMarker = [GMSMarker new];

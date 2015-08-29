@@ -8,12 +8,12 @@
 
 // Class to store information about identified aircraft
 
-#import "Message.h"
-#import "Position.h"
+#import "VXMessage.h"
+#import "VXPosition.h"
 
 #import <Foundation/Foundation.h>
 
-@interface Aircraft : NSObject
+@interface VXAircraft : NSObject
 {
     NSString *hexID;
     int      flightID;
@@ -29,10 +29,12 @@
 
     NSDate *lastMessageTimestamp;
 
-    //NSMutableArray *messages;
+    // TODO: Aircraft history (position, speed, others?)
     NSMutableArray *positionHistory;
 
-    // TODO: Aircraft history (position, speed, others?)
+    // We could choose to keep the raw messages, but
+    // really we will opt to store the relevant data
+    //NSMutableArray *messages;
 
     // TODO: lots to do here
 }
@@ -51,8 +53,9 @@
 @property (nonatomic, assign) double currentSpeed;
 
 @property (nonatomic, retain) NSDate *lastMessageTimestamp;
+@property (nonatomic, retain) NSMutableArray *positionHistory;;
 
 // Methods
-- (void) addMessage:(Message*)newMessage;
+- (void) addMessage:(VXMessage*)newMessage;
 
 @end

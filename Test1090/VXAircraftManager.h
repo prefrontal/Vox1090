@@ -8,7 +8,7 @@
 
 #import <Foundation/Foundation.h>
 
-@interface AircraftManager : NSObject
+@interface VXAircraftManager : NSObject
 {
     NSString *someProperty;
 }

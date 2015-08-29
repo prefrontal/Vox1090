@@ -8,7 +8,7 @@
 
 #import <Foundation/Foundation.h>
 
-@interface Position : NSObject
+@interface VXPosition : NSObject
 {
     double latitude;
     double longitude;

@@ -137,9 +137,11 @@ static double EXPIRATION_TIME         = 120.0; // Seconds
     marker.position = CLLocationCoordinate2DMake (STARTING_LATITUDE, STARTING_LONGITUDE);
     marker.map = mapView_;
 
-    for (id key in aircraftBuffer)
+    for (VXAircraft *key in aircraftBuffer)
     {
         VXAircraft *aPlane = [aircraftBuffer objectForKey:key];
+
+        // -----------------------------------------------------------------------------------------
 
         // Create new marker at current aircraft position
         GMSMarker *planeMarker = [GMSMarker new];
@@ -157,6 +159,33 @@ static double EXPIRATION_TIME         = 120.0; // Seconds
             planeMarker.opacity = 1 - (messageAge / EXPIRATION_TIME);
 
         planeMarker.map = mapView_;
+
+        // -----------------------------------------------------------------------------------------
+
+        // Plot aircraft position history
+        GMSMutablePath *path = [GMSMutablePath path];
+
+        NSMutableArray *positionHistory = [aPlane positionHistory];
+        long positionCount = [positionHistory count];
+        NSMutableArray *segmentStyles = [NSMutableArray new];
+
+        for (int i = 0; i < positionCount; i++)
+        {
+            VXPosition *position = [positionHistory objectAtIndex:i];
+            [path addCoordinate:CLLocationCoordinate2DMake (position.latitude, position.longitude)];
+
+            double transparency = (float)i/(float)positionCount;
+            UIColor *myColor = [UIColor colorWithRed:0.0 green:0.0 blue:0.6 alpha:transparency];
+            [segmentStyles addObject:[GMSStyleSpan spanWithColor:myColor]];
+        }
+
+        GMSPolyline *polyline = [GMSPolyline polylineWithPath:path];
+
+        polyline.spans = segmentStyles;
+        polyline.strokeWidth = 4.0f;
+        polyline.map = mapView_;
+
+        // -----------------------------------------------------------------------------------------
     }
 }
 

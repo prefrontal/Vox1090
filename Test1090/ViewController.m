@@ -146,10 +146,16 @@ static double EXPIRATION_TIME         = 120.0; // Seconds
         // Create new marker at current aircraft position
         GMSMarker *planeMarker = [GMSMarker new];
         planeMarker.position = CLLocationCoordinate2DMake (aPlane.currentRawLatitude, aPlane.currentRawLongitude);
-        planeMarker.icon = [UIImage imageNamed:@"Airplane"];
+
 
         // Rotate the icon to match the heading
         CLLocationDegrees degrees = [aPlane currentHeading];
+
+        if (0.0 == degrees)
+            planeMarker.icon = [UIImage imageNamed:@"Airplane-NoDirection"];
+        else
+            planeMarker.icon = [UIImage imageNamed:@"Airplane"];
+
         planeMarker.groundAnchor = CGPointMake (0.5, 0.5);
         planeMarker.rotation = degrees;
 
@@ -163,10 +169,10 @@ static double EXPIRATION_TIME         = 120.0; // Seconds
         // -----------------------------------------------------------------------------------------
 
         // Plot aircraft position history
-        GMSMutablePath *path = [GMSMutablePath path];
-
         NSMutableArray *positionHistory = [aPlane positionHistory];
         long positionCount = [positionHistory count];
+
+        GMSMutablePath *path = [GMSMutablePath path];
         NSMutableArray *segmentStyles = [NSMutableArray new];
 
         for (int i = 0; i < positionCount; i++)
@@ -174,7 +180,21 @@ static double EXPIRATION_TIME         = 120.0; // Seconds
             VXPosition *position = [positionHistory objectAtIndex:i];
             [path addCoordinate:CLLocationCoordinate2DMake (position.latitude, position.longitude)];
 
+            // Earlier line segments have lower opacity
             double transparency = (float)i/(float)positionCount;
+
+            // If the plane marker is disappearing, make the
+            // position history disappear as well
+            if (messageAge > EXPIRATION_WARNING_TIME)
+            {
+                transparency = (float)i/(float)positionCount - (messageAge / EXPIRATION_TIME);
+
+                if (transparency < 0.0)
+                    transparency = 0.0;
+                if (transparency > 1.0)
+                    transparency = 1.0;
+            }
+
             UIColor *myColor = [UIColor colorWithRed:0.0 green:0.0 blue:0.6 alpha:transparency];
             [segmentStyles addObject:[GMSStyleSpan spanWithColor:myColor]];
         }

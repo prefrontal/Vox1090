@@ -20,7 +20,7 @@
 	if (self)
 	{
         // Setup objects
-        [self initNetworkCommunication:@"10.0.1.92" withPort:30003];
+        [self initNetworkCommunication:@"10.0.1.14" withPort:30003];
 		messageArray = [NSMutableArray new];
 	}
 	

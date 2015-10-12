@@ -17,7 +17,12 @@
 {
     GMSMapView *mapView_;
 
+    // TODO: This needs to get moved into the aircraft manager (deprecated)
     VXDataSource1090* dataSource;
+
+    VXAircraftManager *aircraftManager;
+    VXCartographyManager *cartographyManager;
+
     NSTimer* dataProcessingTimer;
 
     NSMutableDictionary* aircraftBuffer;
@@ -51,7 +56,12 @@ static double EXPIRATION_TIME         = 120.0; // Seconds
 
     // -------------------------------------------------------------------------------
 
+    // TODO: This needs to get moved into the aircraft manager (deprecated)
     dataSource = [VXDataSource1090 new];
+
+    aircraftManager = [VXAircraftManager sharedManager];
+    cartographyManager = [VXCartographyManager sharedManager];
+
     aircraftBuffer = [NSMutableDictionary new];
 
     // Start the data collection timer
@@ -132,11 +142,8 @@ static double EXPIRATION_TIME         = 120.0; // Seconds
     // TODO: In the future it may be better to just update the markers...
     [mapView_ clear];
 
-    // Creates a marker at the designated home coordinates
-    GMSMarker *marker = [GMSMarker new];
-    marker.position = CLLocationCoordinate2DMake (STARTING_LATITUDE, STARTING_LONGITUDE);
-    marker.map = mapView_;
-
+    // Display all aircraft and associated graphics
+    // Airplanes have to go first so they are rendered on top
     for (VXAircraft *key in aircraftBuffer)
     {
         VXAircraft *aPlane = [aircraftBuffer objectForKey:key];
@@ -204,8 +211,33 @@ static double EXPIRATION_TIME         = 120.0; // Seconds
         polyline.spans = segmentStyles;
         polyline.strokeWidth = 4.0f;
         polyline.map = mapView_;
+    }
 
-        // -----------------------------------------------------------------------------------------
+    // -----------------------------------------------------------------------------------------
+
+    // Creates a marker at the designated home coordinates
+    // GMSMarker *marker = [GMSMarker new];
+    // marker.position = CLLocationCoordinate2DMake (STARTING_LATITUDE, STARTING_LONGITUDE);
+    // marker.map = mapView_;
+
+    // Create airport markers
+    for (VXAirport *airport in [cartographyManager airports])
+    {
+        GMSMarker *marker = [GMSMarker new];
+        marker.groundAnchor = CGPointMake (0.5, 0.5);
+        marker.position = CLLocationCoordinate2DMake (airport.latitude, airport.longitude);
+        marker.icon = [UIImage imageNamed:@"Airport"];
+        marker.map = mapView_;
+    }
+
+    // Create navaid markers
+    for (VXNavigationAid *navaid in [cartographyManager navigationAids])
+    {
+        GMSMarker *marker = [GMSMarker new];
+        marker.groundAnchor = CGPointMake (0.5, 0.5);
+        marker.position = CLLocationCoordinate2DMake (navaid.latitude, navaid.longitude);
+        marker.icon = [UIImage imageNamed:@"Navaid"];
+        marker.map = mapView_;
     }
 }
 

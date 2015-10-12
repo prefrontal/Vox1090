@@ -10,7 +10,25 @@
 
 @implementation VXLocation
 
+@synthesize name;
 @synthesize latitude;
 @synthesize longitude;
+
+- (id)init
+{
+    if (self = [super init])
+    {
+        name = @"";
+        latitude = 0.0;
+        longitude = 0.0;
+    }
+
+    return self;
+}
+
+- (void)dealloc
+{
+
+}
 
 @end

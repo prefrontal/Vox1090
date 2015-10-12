@@ -14,6 +14,7 @@
 
 @interface VXLocation : NSObject
 
+@property (nonatomic, retain) NSString* name;
 @property (nonatomic, assign) double latitude;
 @property (nonatomic, assign) double longitude;
 

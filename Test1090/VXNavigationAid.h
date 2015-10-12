@@ -6,8 +6,10 @@
 //  Copyright © 2015 VoxelWise. All rights reserved.
 //
 
+#import "VXLocation.h"
+
 #import <Foundation/Foundation.h>
 
-@interface VXNavigationAid : NSObject
+@interface VXNavigationAid : VXLocation
 
 @end

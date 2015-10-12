@@ -6,8 +6,10 @@
 //  Copyright © 2015 VoxelWise. All rights reserved.
 //
 
+#import "VXLocation.h"
+
 #import <Foundation/Foundation.h>
 
-@interface VXAirport : NSObject
+@interface VXAirport : VXLocation
 
 @end

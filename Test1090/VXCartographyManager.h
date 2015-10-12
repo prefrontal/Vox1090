@@ -6,6 +6,9 @@
 //  Copyright © 2015 VoxelWise. All rights reserved.
 //
 
+#import "VXAirport.h"
+#import "VXNavigationAid.h"
+
 #import <Foundation/Foundation.h>
 
 @interface VXCartographyManager : NSObject

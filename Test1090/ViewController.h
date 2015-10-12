@@ -6,11 +6,17 @@
 //  Copyright (c) 2015 VoxelWise. All rights reserved.
 //
 
-#import <UIKit/UIKit.h>
-
 #import "VXDataSource1090.h"
 
+#import "VXAircraftManager.h"
+#import "VXCartographyManager.h"
+
+#import <UIKit/UIKit.h>
+
 @interface ViewController : UIViewController
+{
+
+}
 
 // Methods
 - (void) processData;

@@ -8,6 +8,7 @@
 
 #import "VXAirport.h"
 #import "VXNavigationAid.h"
+#import "VXAirway.h"
 
 #import <Foundation/Foundation.h>
 
@@ -15,15 +16,28 @@
 {
     NSMutableArray *airports;
     NSMutableArray *navigationAids;
+    NSMutableArray *airways;
+
+    // |----> What else?
+    // | Airways?
+    // | Cities?
+    // | Location identifiers?
+    // | Other landmarks?
 }
 
 @property (nonatomic, retain) NSMutableArray *airports;
 @property (nonatomic, retain) NSMutableArray *navigationAids;
+@property (nonatomic, retain) NSMutableArray *airways;
 
 + (id)sharedManager;
 
 // Data Loading Methods
 - (void)loadAirports;
 - (void)loadNavigationAids;
+
+- (void)loadAirways;
+
+//- (NSMutableArray*)getAirports:  (double minLatitude, double maxLatitude, double minLongitude, double maxLongitude);
+//- (NSMutableArray*)getNavigationAids:  (double minLatitude, double maxLatitude, double minLongitude, double maxLongitude);
 
 @end

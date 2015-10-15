@@ -239,6 +239,24 @@ static double EXPIRATION_TIME         = 120.0; // Seconds
         marker.icon = [UIImage imageNamed:@"Navaid"];
         marker.map = mapView_;
     }
+
+    // Create airway paths
+    for (VXAirway *airway in [cartographyManager airways])
+    {
+        GMSMutablePath *path = [GMSMutablePath path];
+
+        for (VXLandmark *point in airway.waypoints)
+        {
+            [path addCoordinate:CLLocationCoordinate2DMake(point.latitude, point.longitude)];
+        }
+
+        GMSPolyline *polyline = [GMSPolyline polylineWithPath:path];
+        polyline.map = mapView_;
+
+    }
+
+
+
 }
 
 

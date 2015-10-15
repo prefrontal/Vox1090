@@ -1,26 +1,29 @@
 //
-//  VXLocation.m
+//  VXLandmark.m
 //  Test1090
 //
 //  Created by Craig Bennett on 10/11/15.
 //  Copyright © 2015 VoxelWise. All rights reserved.
 //
 
-#import "VXLocation.h"
+#import "VXLandmark.h"
 
-@implementation VXLocation
+@implementation VXLandmark
 
-@synthesize name;
+@synthesize identifier;
 @synthesize latitude;
 @synthesize longitude;
+@synthesize altitude;
 
 - (id)init
 {
     if (self = [super init])
     {
-        name = @"";
+        identifier = @"";
+        
         latitude = 0.0;
         longitude = 0.0;
+        altitude = 0.0;
     }
 
     return self;

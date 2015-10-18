@@ -11,9 +11,10 @@
 #import "VXAircraftManager.h"
 #import "VXCartographyManager.h"
 
+#import <GoogleMaps/GoogleMaps.h>
 #import <UIKit/UIKit.h>
 
-@interface ViewController : UIViewController
+@interface ViewController : UIViewController <GMSMapViewDelegate>
 {
 
 }
@@ -21,7 +22,7 @@
 // Methods
 - (void) processData;
 
-- (void) updateAircraftMarkers;
+- (void) updateMapDisplay;
 
 @end
 

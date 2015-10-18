@@ -16,17 +16,23 @@
 @interface ViewController ()
 {
     GMSMapView *mapView_;
+    GMSVisibleRegion mapRegion;
+
+    NSTimer* dataProcessingTimer;
 
     // TODO: This needs to get moved into the aircraft manager (deprecated)
     VXDataSource1090* dataSource;
 
-    VXAircraftManager *aircraftManager;
     VXCartographyManager *cartographyManager;
+    NSMutableArray *aircraftMarkerCache;
+    NSMutableArray *aircraftTrackCache;
 
-    NSTimer* dataProcessingTimer;
-
+    VXAircraftManager *aircraftManager;
     NSMutableDictionary* aircraftBuffer;
 }
+
+    - (void)drawAircraft;
+    - (void)drawBackground;
 
 @end
 
@@ -54,6 +60,10 @@ static double EXPIRATION_TIME         = 120.0; // Seconds
     mapView_.myLocationEnabled = YES;
     self.view = mapView_;
 
+    mapView_.delegate = self;
+
+    mapRegion = [[mapView_ projection] visibleRegion];
+
     // -------------------------------------------------------------------------------
 
     // TODO: This needs to get moved into the aircraft manager (deprecated)
@@ -63,6 +73,8 @@ static double EXPIRATION_TIME         = 120.0; // Seconds
     cartographyManager = [VXCartographyManager sharedManager];
 
     aircraftBuffer = [NSMutableDictionary new];
+    aircraftMarkerCache = [NSMutableArray new];
+    aircraftTrackCache = [NSMutableArray new];
 
     // Start the data collection timer
     dataProcessingTimer = [NSTimer scheduledTimerWithTimeInterval: 1.0
@@ -131,19 +143,38 @@ static double EXPIRATION_TIME         = 120.0; // Seconds
         }
     }
 
-    [self updateAircraftMarkers];
+    [self updateMapDisplay];
 }
 
 #pragma mark Map Handling
 
-- (void) updateAircraftMarkers
+- (void) updateMapDisplay
 {
     // Reset the map view to update the markers
     // TODO: In the future it may be better to just update the markers...
-    [mapView_ clear];
+    //[mapView_ clear];
+
+    // For performance reasons we only try to redraw the aircraft-related data on each update
+    // All the aircraft markers and plot data are cached and cleared on each go-round
+    // The background map date (airports, airways, etc) are only plotted on a map view change
+
+    [self drawAircraft];
+}
+
+-(void)drawAircraft
+{
+    // Clear out the current aircraft markers and position tracks
+    for (GMSMarker *marker in aircraftMarkerCache)
+        marker.map = nil;
+
+    [aircraftMarkerCache removeAllObjects];
+
+    for (GMSPolyline *polyline in aircraftTrackCache)
+        polyline.map = nil;
+
+    [aircraftTrackCache removeAllObjects];
 
     // Display all aircraft and associated graphics
-    // Airplanes have to go first so they are rendered on top
     for (VXAircraft *key in aircraftBuffer)
     {
         VXAircraft *aPlane = [aircraftBuffer objectForKey:key];
@@ -153,7 +184,7 @@ static double EXPIRATION_TIME         = 120.0; // Seconds
         // Create new marker at current aircraft position
         GMSMarker *planeMarker = [GMSMarker new];
         planeMarker.position = CLLocationCoordinate2DMake (aPlane.currentRawLatitude, aPlane.currentRawLongitude);
-
+        [aircraftMarkerCache addObject:planeMarker];
 
         // Rotate the icon to match the heading
         CLLocationDegrees degrees = [aPlane currentHeading];
@@ -207,14 +238,16 @@ static double EXPIRATION_TIME         = 120.0; // Seconds
         }
 
         GMSPolyline *polyline = [GMSPolyline polylineWithPath:path];
-
+        [aircraftTrackCache addObject:polyline];
+        
         polyline.spans = segmentStyles;
         polyline.strokeWidth = 4.0f;
         polyline.map = mapView_;
     }
+}
 
-    // -----------------------------------------------------------------------------------------
-
+- (void)drawBackground
+{
     // Creates a marker at the designated home coordinates
     // GMSMarker *marker = [GMSMarker new];
     // marker.position = CLLocationCoordinate2DMake (STARTING_LATITUDE, STARTING_LONGITUDE);
@@ -251,19 +284,21 @@ static double EXPIRATION_TIME         = 120.0; // Seconds
         }
 
         GMSPolyline *polyline = [GMSPolyline polylineWithPath:path];
+
+        if ([airway.identifier containsString:@"J"])
+            polyline.spans = @[[GMSStyleSpan spanWithColor:[UIColor redColor]]];
+
         polyline.map = mapView_;
-
+        
     }
-
-
-
 }
 
+#pragma mark Google Map delegates
 
-
-//    [dataProcessingTimer invalidate];
-//    dataProcessingTimer = nil;
-//
-//    dataSource = nil;
+- (void)mapView:(GMSMapView *)mapView idleAtCameraPosition:(GMSCameraPosition *)position
+{
+    NSLog (@"AHHHHHHHHHHHHHHHHHHHHHHH!");
+    [self drawBackground];
+}
 
 @end

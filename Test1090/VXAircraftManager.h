@@ -10,10 +10,10 @@
 
 @interface VXAircraftManager : NSObject
 {
-    NSString *someProperty;
+    NSMutableDictionary *aircraftBuffer;
 }
 
-@property (nonatomic, retain) NSString *someProperty;
+@property (nonatomic,retain) NSMutableDictionary *aircraftBuffer;
 
 + (id)sharedManager;
 

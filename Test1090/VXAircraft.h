@@ -53,7 +53,7 @@
 @property (nonatomic, assign) double currentSpeed;
 
 @property (nonatomic, retain) NSDate *lastMessageTimestamp;
-@property (nonatomic, retain) NSMutableArray *positionHistory;;
+@property (nonatomic, retain) NSMutableArray *positionHistory;
 
 // Methods
 - (void) addMessage:(VXMessage*)newMessage;

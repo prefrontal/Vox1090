@@ -11,17 +11,12 @@
 #import "VXAircraft.h"
 #import "VXMessage.h"
 
-@import GoogleMaps;
-
 @interface ViewController ()
 {
     GMSMapView *mapView_;
     GMSVisibleRegion mapRegion;
 
-    NSTimer* dataProcessingTimer;
-
-    // TODO: This needs to get moved into the aircraft manager (deprecated)
-    VXDataSource1090* dataSource;
+    NSTimer *mapUpdateTimer;
 
     VXCartographyManager *cartographyManager;
     NSMutableArray *aircraftMarkerCache;
@@ -39,8 +34,8 @@
 static double STARTING_LATITUDE  = 34.4258;
 static double STARTING_LONGITUDE = -119.7142;
 
-static double EXPIRATION_WARNING_TIME = 30.0;  // Seconds
 static double EXPIRATION_TIME         = 120.0; // Seconds
+static double EXPIRATION_WARNING_TIME = 30.0;  // Seconds
 
 @implementation ViewController
 
@@ -66,9 +61,6 @@ static double EXPIRATION_TIME         = 120.0; // Seconds
 
     // -------------------------------------------------------------------------------
 
-    // TODO: This needs to get moved into the aircraft manager (deprecated)
-    dataSource = [VXDataSource1090 new];
-
     aircraftManager = [VXAircraftManager sharedManager];
     cartographyManager = [VXCartographyManager sharedManager];
 
@@ -77,9 +69,9 @@ static double EXPIRATION_TIME         = 120.0; // Seconds
     aircraftTrackCache = [NSMutableArray new];
 
     // Start the data collection timer
-    dataProcessingTimer = [NSTimer scheduledTimerWithTimeInterval: 1.0
+    mapUpdateTimer = [NSTimer scheduledTimerWithTimeInterval: 1.0
                                                            target: self
-                                                         selector: @selector(processData)
+                                                         selector: @selector(updateMapDisplay)
                                                          userInfo: nil
                                                           repeats: YES];
 
@@ -93,66 +85,11 @@ static double EXPIRATION_TIME         = 120.0; // Seconds
 
 }
 
-#pragma mark Data Handling
-
-- (void) processData
-{
-    // Get every available new message from data source and format as message objects
-    while ([dataSource hasData])
-    {
-        NSString* nextMessageString = [dataSource dequeMessage];
-
-        if (nextMessageString)
-        {
-            VXMessage* tempMessage = [VXMessage newMessageWithSBS1String:nextMessageString];
-
-            if (!tempMessage) // Sanity check
-                continue;
-
-            VXAircraft* tempAircraft = [aircraftBuffer objectForKey: [tempMessage hexId]];
-
-            if (tempAircraft)
-            {
-                [tempAircraft addMessage:tempMessage];
-            }
-            else
-            {
-                tempAircraft = [VXAircraft new];
-                [tempAircraft addMessage:tempMessage];
-                [aircraftBuffer setObject:tempAircraft forKey:[tempMessage hexId]];
-                NSLog (@"New Aircraft!");
-            }
-        }
-    }
-
-    // Remove expired aircraft objects
-    // Can't fast enumerate with mutation, so get
-    // a list of keys and enumerate over those
-    for (NSString *key in [aircraftBuffer allKeys])
-    {
-        VXAircraft *aPlane = [aircraftBuffer objectForKey:key];
-
-        NSDate* lastMessage = [aPlane lastMessageTimestamp];
-
-        double messageAge = fabs([lastMessage timeIntervalSinceNow]);
-
-        if (messageAge > EXPIRATION_TIME)
-        {
-            [aircraftBuffer removeObjectForKey:key];
-            NSLog(@"Removed aircraft!");
-        }
-    }
-
-    [self updateMapDisplay];
-}
-
 #pragma mark Map Handling
 
 - (void) updateMapDisplay
 {
     // Reset the map view to update the markers
-    // TODO: In the future it may be better to just update the markers...
-    //[mapView_ clear];
 
     // For performance reasons we only try to redraw the aircraft-related data on each update
     // All the aircraft markers and plot data are cached and cleared on each go-round
@@ -173,6 +110,10 @@ static double EXPIRATION_TIME         = 120.0; // Seconds
         polyline.map = nil;
 
     [aircraftTrackCache removeAllObjects];
+
+    // -----------------------------------------------------------
+
+    aircraftBuffer = aircraftManager.aircraftBuffer;
 
     // Display all aircraft and associated graphics
     for (VXAircraft *key in aircraftBuffer)

@@ -6,6 +6,8 @@
 //  Copyright (c) 2015 VoxelWise. All rights reserved.
 //
 
+#import "GoogleMapsKeys.h"
+
 #import "AppDelegate.h"
 
 @import GoogleMaps;
@@ -23,7 +25,7 @@
     // Override point for customization after application launch.
 
     // Google Maps API initialization
-    [GMSServices provideAPIKey:@"Noooooope"];
+    [GMSServices provideAPIKey:GOOGLE_API_KEY];
 
     return YES;
 }

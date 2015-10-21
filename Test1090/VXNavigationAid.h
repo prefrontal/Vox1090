@@ -6,10 +6,34 @@
 //  Copyright © 2015 VoxelWise. All rights reserved.
 //
 
-#import "VXLocation.h"
+#import "VXLandmark.h"
 
 #import <Foundation/Foundation.h>
 
-@interface VXNavigationAid : VXLocation
+// Presented in the order that the FAA uses, for better or worse...
+enum navaids
+{
+    UNKNOWN,
+    VORTAC,
+    VORDME,
+    FANMARKER,
+    CONSOLAN,
+    MARINENDB,
+    MARINENDBDME,
+    VOT,
+    NDB,
+    NDBDME,
+    TACAN,
+    UHFNDB,
+    VOR,
+    DME
+};
+
+@interface VXNavigationAid : VXLandmark
+
+@property (nonatomic, retain) NSString* name;
+@property (nonatomic, assign) enum navaids type;
+
+@property (nonatomic, assign) double frequency;
 
 @end

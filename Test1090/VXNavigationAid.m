@@ -10,11 +10,17 @@
 
 @implementation VXNavigationAid
 
+@synthesize name;
+@synthesize type;
+@synthesize frequency;
+
 - (id)init
 {
     if (self = [super init])
     {
-
+        name = @"";
+        type = UNKNOWN;
+        frequency = 0.0;
     }
 
     return self;

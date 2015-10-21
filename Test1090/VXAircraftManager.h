@@ -17,4 +17,7 @@
 
 + (id)sharedManager;
 
+//- (void)connect;
+//- (void)disconnect;
+
 @end

@@ -39,7 +39,8 @@ static double EXPIRATION_WARNING_TIME = 30.0;  // Seconds
 
 @implementation MapViewController
 
-- (NSUInteger)supportedInterfaceOrientations
+// The default view should be landscape
+- (UIInterfaceOrientationMask)supportedInterfaceOrientations
 {
     return UIInterfaceOrientationMaskLandscape;
 }

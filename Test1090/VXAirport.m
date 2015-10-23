@@ -10,11 +10,21 @@
 
 @implementation VXAirport
 
+@synthesize name;
+@synthesize facilityType;
+
+@synthesize unicom;
+@synthesize ctaf;
+
 - (id)init
 {
     if (self = [super init])
     {
+        name = @"";
+        facilityType = UNKNOWN_FACILITY_TYPE;
 
+        unicom = 0.0;
+        ctaf = 0.0;
     }
 
     return self;

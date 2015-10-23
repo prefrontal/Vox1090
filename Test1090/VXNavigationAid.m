@@ -19,7 +19,7 @@
     if (self = [super init])
     {
         name = @"";
-        type = UNKNOWN;
+        type = UNKNOWN_NAVAID;
         frequency = 0.0;
     }
 

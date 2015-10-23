@@ -13,7 +13,7 @@
 // Presented in the order that the FAA uses, for better or worse...
 enum navaids
 {
-    UNKNOWN,
+    UNKNOWN_NAVAID,
     VORTAC,
     VORDME,
     FANMARKER,

@@ -10,10 +10,14 @@
 
 @implementation InitialViewController
 
-// The default view should be landscape
-- (UIInterfaceOrientationMask)supportedInterfaceOrientations
+//// The default view should be landscape
+//- (UIInterfaceOrientationMask)supportedInterfaceOrientations
+//{
+//    return UIInterfaceOrientationMaskLandscape;
+//}
+
+-(IBAction)unwindToInitialView:(UIStoryboardSegue *)segue
 {
-    return UIInterfaceOrientationMaskLandscape;
 }
 
 @end

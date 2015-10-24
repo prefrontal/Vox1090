@@ -26,13 +26,16 @@
     NSMutableDictionary* aircraftBuffer;
 }
 
-    - (void)drawAircraft;
-    - (void)drawBackground;
+- (void)initializeMap;
+- (void)updateMapDisplay;
+
+- (void)drawAircraft;
+- (void)drawBackground;
 
 @end
 
-static double STARTING_LATITUDE  = 34.4258;
-static double STARTING_LONGITUDE = -119.7142;
+static double STARTING_LATITUDE       = 34.4258;
+static double STARTING_LONGITUDE      = -119.7142;
 
 static double EXPIRATION_TIME         = 120.0; // Seconds
 static double EXPIRATION_WARNING_TIME = 30.0;  // Seconds
@@ -40,9 +43,32 @@ static double EXPIRATION_WARNING_TIME = 30.0;  // Seconds
 @implementation MapViewController
 
 // The default view should be landscape
-- (UIInterfaceOrientationMask)supportedInterfaceOrientations
+//- (UIInterfaceOrientationMask)supportedInterfaceOrientations
+//{
+//    return UIInterfaceOrientationMaskLandscape;
+//}
+
+- (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator {
+    [coordinator animateAlongsideTransition:nil completion:^(id<UIViewControllerTransitionCoordinatorContext> context) {
+        [self initializeMap];
+    }];
+}
+
+- (void)initializeMap
 {
-    return UIInterfaceOrientationMaskLandscape;
+    // Initialize the Google Map view
+    GMSCameraPosition *camera = [GMSCameraPosition cameraWithLatitude:STARTING_LATITUDE
+                                                            longitude:STARTING_LONGITUDE
+                                                                 zoom:9];
+    mapView_ = [GMSMapView mapWithFrame:self.view.bounds camera:camera];
+    mapView_.mapType = kGMSTypeTerrain;
+    mapView_.myLocationEnabled = YES;
+    //self.view = mapView_;
+    [self.view insertSubview:mapView_ atIndex:0];
+
+    mapView_.delegate = self;
+
+    mapRegion = [[mapView_ projection] visibleRegion];
 }
 
 // Do any additional setup after loading the view, typically from a nib.
@@ -50,20 +76,7 @@ static double EXPIRATION_WARNING_TIME = 30.0;  // Seconds
 {
     [super viewDidLoad];
 
-    // -------------------------------------------------------------------------------
-
-    // Initialize the Google Map view
-    GMSCameraPosition *camera = [GMSCameraPosition cameraWithLatitude:STARTING_LATITUDE
-                                                            longitude:STARTING_LONGITUDE
-                                                                 zoom:9];
-    mapView_ = [GMSMapView mapWithFrame:CGRectZero camera:camera];
-    mapView_.mapType = kGMSTypeTerrain;
-    mapView_.myLocationEnabled = YES;
-    self.view = mapView_;
-
-    mapView_.delegate = self;
-
-    mapRegion = [[mapView_ projection] visibleRegion];
+    [self initializeMap];
 
     // -------------------------------------------------------------------------------
 
